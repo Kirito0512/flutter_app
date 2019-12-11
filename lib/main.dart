@@ -67,6 +67,17 @@ class RandomWordsState extends State<RandomWords> {
     return new ListTile(
       title: new Text(pair.asPascalCase, style: _biggerFont,),
       trailing: new Icon(alreadySaved ? Icons.favorite : Icons.favorite_border, color : alreadySaved ? Colors.red : null),
+      //  点击按钮
+      onTap: (){
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+
+        });
+      },
     );
   }
 }
