@@ -59,12 +59,14 @@ class RandomWordsState extends State<RandomWords> {
             _suggestions.addAll(generateWordPairs().take(10));
           }
           return _buildRow(_suggestions[index]);
-        })
+        });
   }
 
   Widget _buildRow(WordPair pair) {
-    alreadySaved = _saved.contains(pair);
+    final bool alreadySaved = _saved.contains(pair);
     return new ListTile(
-      title: new Text(pair.asPascalCase, style: _biggerFont,),)
+      title: new Text(pair.asPascalCase, style: _biggerFont,),
+      trailing: new Icon(alreadySaved ? Icons.favorite : Icons.favorite_border, color : alreadySaved ? Colors.red : null),
+    );
   }
 }
