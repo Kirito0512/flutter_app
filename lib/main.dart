@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 //          child: new RandomWords(),
 //        ),
 //      ),
-    new RandomWords(),
+          new RandomWords(),
     );
   }
 }
@@ -40,11 +40,47 @@ class RandomWordsState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext context) {
+
+    // 建立一个路由并将其推入到导航管理器栈中
+    void _pushSaved() {
+      Navigator.of(context).push(
+        new MaterialPageRoute<void>(   // 新增如下20行代码 ...
+          builder: (BuildContext context) {
+            final Iterable<ListTile> tiles = _saved.map(
+                  (WordPair pair) {
+                return new ListTile(
+                  title: new Text(
+                    pair.asPascalCase,
+                    style: _biggerFont,
+                  ),
+                );
+              },
+            );
+
+            final List<Widget> divided = ListTile
+                .divideTiles(
+              context: context,
+              tiles: tiles,
+            ).toList();
+
+            return new Scaffold(
+              appBar: new AppBar(title: const Text('Saved Suggestions'),),
+              body: new ListView(children: divided,),);
+
+          },
+        ),                           // ... 新增代码结束
+      );
+    }
     // TODO: implement build
 //    final wordPair = new WordPair.random();
     //    return new Text(wordPair.asPascalCase);
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Startup Name Generator'),),
+      appBar: new AppBar(
+        title: new Text('Startup Name Generator'),
+        actions: <Widget>[
+          new IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved)
+        ],
+      ),
       body: _buildSuggestions(),
     );
   }
@@ -65,17 +101,20 @@ class RandomWordsState extends State<RandomWords> {
   Widget _buildRow(WordPair pair) {
     final bool alreadySaved = _saved.contains(pair);
     return new ListTile(
-      title: new Text(pair.asPascalCase, style: _biggerFont,),
-      trailing: new Icon(alreadySaved ? Icons.favorite : Icons.favorite_border, color : alreadySaved ? Colors.red : null),
+      title: new Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+      trailing: new Icon(alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.red : null),
       //  点击按钮
-      onTap: (){
+      onTap: () {
         setState(() {
           if (alreadySaved) {
             _saved.remove(pair);
           } else {
             _saved.add(pair);
           }
-
         });
       },
     );
